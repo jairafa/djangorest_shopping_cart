@@ -8,16 +8,20 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.users.api.serializers import (
-    CustomTokenObtainPairSerializer, CustomUserSerializer
+    CustomTokenObtainPairSerializer, CustomUserSerializer , UserSerializer
 )
 from apps.users.models import User
-
-
 
 class Login(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+        Permite el uso de la api a un usuario registrado
+
+
+        El usuario debe existir, estar activo y tener asignado un passwor
+        """
         username = request.data.get('username', '')
         password = request.data.get('password', '')
         user = authenticate(
@@ -39,7 +43,14 @@ class Login(TokenObtainPairView):
         return Response({'error': 'Contraseña o nombre de usuario incorrectos'}, status=status.HTTP_400_BAD_REQUEST)
 
 class Logout(GenericAPIView):
+    serializer_class = UserSerializer
     def post(self, request, *args, **kwargs):
+        """
+        Permite cerrar sesión  a un usuario logeado
+
+
+        El usuario debe existir, estar activo 
+        """
         user = User.objects.filter(id=request.data.get('user', 0))
         if user.exists():
             RefreshToken.for_user(user.first())

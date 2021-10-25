@@ -12,6 +12,12 @@ from apps.users.api.serializers import (
 )
 
 class UserViewSet(viewsets.GenericViewSet):
+    """
+    Consulta o actualiza los datos de un usuario
+
+
+    Características de los usuarios
+    """
     model = User
     serializer_class = UserSerializer
     list_serializer_class = UserListSerializer
@@ -29,6 +35,12 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @action(detail=True, methods=['post'])
     def set_password(self, request, pk=None):
+        """
+        Cambio de password de un usuario
+
+
+        Debe ingresar el nuevo password y se pide confirmación del mismo
+        """
         user = self.get_object(pk)
         password_serializer = PasswordSerializer(data=request.data)
         if password_serializer.is_valid():
@@ -43,15 +55,28 @@ class UserViewSet(viewsets.GenericViewSet):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request):
+        """
+        Retorna un listado de usuarios
+
+
+        Presentación de los datos a retornar de un usuario
+        """
         users = self.get_queryset()
         users_serializer = self.list_serializer_class(users, many=True)
         return Response(users_serializer.data, status=status.HTTP_200_OK)
     
     def create(self, request):
+        """
+        Permite la Creación de un usuario
+
+
+        A continuación se describen los datos para crear un usuario
+        """
         user_serializer = self.serializer_class(data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
             return Response({
+                'user':user_serializer.data,
                 'message': 'Usuario registrado correctamente.'
             }, status=status.HTTP_201_CREATED)
         return Response({
@@ -60,11 +85,23 @@ class UserViewSet(viewsets.GenericViewSet):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
+        """
+        Obtiene un usuario
+
+
+        Retorna los datos de un usuario
+        """
         user = self.get_object(pk)
         user_serializer = self.serializer_class(user)
         return Response(user_serializer.data)
     
     def update(self, request, pk=None):
+        """
+        Actualización de atributos de un usuario
+
+
+        A continuación se describen los datos para modificar un usuario
+        """
         user = self.get_object(pk)
         user_serializer = UpdateUserSerializer(user, data=request.data)
         if user_serializer.is_valid():
@@ -77,6 +114,12 @@ class UserViewSet(viewsets.GenericViewSet):
             'errors': user_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+        """
+        Eliminación de un usuario
+
+
+        Eliminación lógica de un usuario
+        """
     def destroy(self, request, pk=None):
         user_destroy = self.model.objects.filter(id=pk).update(is_active=False)
         if user_destroy == 1:
