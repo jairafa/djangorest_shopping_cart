@@ -18,6 +18,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_APPS = [
+    'drf_yasg',
     'rest_framework',
     'rest_framework_simplejwt',  
     'rest_framework_simplejwt.token_blacklist',  
@@ -31,6 +32,11 @@ LOCAL_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_APPS + LOCAL_APPS
+
+SWAGGER_SETTINGS = {
+    'DOC_EXPANSION': 'none'
+}
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

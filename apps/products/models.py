@@ -74,8 +74,8 @@ class CartsItems(BaseModel):
     class Meta:
         """Meta definition for Product."""
 
-        verbose_name = 'Carrito de Compras'
-        verbose_name_plural = 'Carritos de Compras'
+        verbose_name = 'Item Producto'
+        verbose_name_plural = 'Items Productos'
 
     def __str__(self):
         """Unicode representation of Product."""
