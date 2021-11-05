@@ -1,17 +1,18 @@
 from rest_framework import serializers
 
-from apps.products.models import CartsItems
+from apps.carts.models import Inventory
 #from apps.products.api.serializers.general_serializers import MeasureUnitSerializer,CategoryProductSerializer
 
 class InventorySerializer(serializers.ModelSerializer):
     """
-    Definición de un producto
+    Definición de un inventario
     """
 
     class Meta:
-        model = Carts
+        model = Inventory
         exclude = ('state','created_date','modified_date','deleted_date')
     
+    """
     def to_representation(self,instance):
         return {
             'inventory_id': instance.id,
@@ -24,3 +25,4 @@ class InventorySerializer(serializers.ModelSerializer):
             'final_balance': instance.final_balance,
             'stock': instance.product.stock,
         }
+    """

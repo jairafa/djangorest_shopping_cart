@@ -27,6 +27,7 @@ THIRD_APPS = [
 
 LOCAL_APPS = [
     'apps.base',
+    'apps.carts',
     'apps.products',
     'apps.users',
 ]

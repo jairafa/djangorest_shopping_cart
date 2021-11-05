@@ -1,4 +1,7 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import(
+    authenticate,
+    logout
+    )
 
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -6,6 +9,7 @@ from rest_framework.response import Response
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.permissions import IsAuthenticated
 
 from apps.users.api.serializers import (
     CustomTokenObtainPairSerializer, CustomUserSerializer , UserSerializer
@@ -44,6 +48,7 @@ class Login(TokenObtainPairView):
 
 class Logout(GenericAPIView):
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
         """
         Permite cerrar sesión  a un usuario logeado
@@ -51,8 +56,13 @@ class Logout(GenericAPIView):
 
         El usuario debe existir, estar activo 
         """
-        user = User.objects.filter(id=request.data.get('user', 0))
+
+        print(f"user ({self.request.user})")
+        print(f"username ({self.request.user.username})")
+
+        user = User.objects.filter(username=self.request.user.username)
         if user.exists():
+            logout(request)
             RefreshToken.for_user(user.first())
             return Response({'message': 'Sesión cerrada correctamente.'}, status=status.HTTP_200_OK)
         return Response({'error': 'No existe este usuario.'}, status=status.HTTP_400_BAD_REQUEST)

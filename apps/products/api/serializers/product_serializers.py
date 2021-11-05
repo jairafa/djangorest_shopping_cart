@@ -5,7 +5,7 @@ from apps.products.models import Products
 
 class ProductSerializer(serializers.ModelSerializer):
     """
-    Definición de un producto
+    Definición de un producto 
     """
 
     class Meta:
@@ -16,4 +16,5 @@ class ProductSerializer(serializers.ModelSerializer):
         return {
             'id': instance.id,
             'name': instance.name,
+            'stock': instance.stock,
         }
