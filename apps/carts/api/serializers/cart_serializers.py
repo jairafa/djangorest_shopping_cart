@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.carts.models import Carts, CartsItems
-from apps.carts.api.serializers.cart_item_serializers import CartItemSerializer, CartItemListingFielfdSerializer
+from apps.carts.api.serializers.cart_item_serializers import CartItemSerializer
 
 class CartSerializer(serializers.ModelSerializer):
     """
@@ -22,3 +22,15 @@ class CartSerializer(serializers.ModelSerializer):
             CartsItems.objects.create(cart=cart, **item)
         return cart
 
+
+    def update(self, instance, validated_data):
+        items_data = self.initial_data.get("products_items")
+
+        for item in items_data:
+            product_id = item.get("product")
+            quantity = item.get("quantity")
+            movement = item.get("movement")
+            obj, created = CartsItems.objects.update_or_create(
+                cart_id = instance.id, product_id = product_id, quantity=quantity,movement=movement)
+            #if created:            
+        return instance
